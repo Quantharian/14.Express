@@ -12,6 +12,13 @@ import {
 import { errorManager } from './controllers/errors.controller.js';
 import { HomeController } from './controllers/home.controller.js';
 import { createProductsRouter } from './routers/products.router.js';
+import { HomePage } from './views/pages/home-page.js';
+import { ProductsController } from './controllers/products.mvc.controller.js';
+import { AnimalFileRepo } from './models/animals.json.repository.js';
+import { AnimalSqliteRepo } from './models/animals.sqlite.repository.js';
+import { Repository } from './models/repository.type.js';
+import { Animal } from './models/animal.type.js';
+
 const debug = createDebug('demo:app');
 debug('Loaded module');
 
@@ -45,10 +52,28 @@ export const createApp = () => {
 
     // Routes
 
-    const homeController = new HomeController();
+    const homeView = new HomePage();
+    const homeController = new HomeController(homeView);
     app.get('/', homeController.getPage);
 
-    app.use('/products', createProductsRouter());
+    let animalModel: Repository<Animal>;
+    switch (process.env.REPO as 'file' | 'sqlite' | 'mysql') {
+        case 'sqlite':
+            animalModel = new AnimalSqliteRepo();
+            break;
+        case 'mysql':
+            animalModel = new AnimalFileRepo();
+            break;
+        case 'file':
+            animalModel = new AnimalFileRepo();
+            break;
+        default:
+            throw new Error('Invalid repository');
+    }
+
+    const productsController = new ProductsController(animalModel);
+
+    app.use('/products', createProductsRouter(productsController));
 
     app.get('*', notFoundController);
     app.use('*', notMethodController);

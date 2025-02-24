@@ -4,18 +4,15 @@ import { ProductsPage } from '../views/pages/products/products-page.js';
 import { DetailPage } from '../views/pages/products/detail-page.js';
 import { UpsertProductsPage } from '../views/pages/products/upsert-page.js';
 import { HttpError } from '../errors/http-error.js';
-import { AnimalFileRepo } from '../models/animals.json.repository.js';
 import type { Animal } from '../models/animal.type.js';
-import type { Repository } from '../models/repository.type.js';
+import { Repository } from '../models/repository.type.js';
 const debug = createDebug('demo:controllers:products-mvc');
 debug('Loaded module');
 
 export class ProductsController {
-    model: Repository<Animal>;
-
-    constructor() {
+    // constructor(public model: AnimalFileRepo) {
+    constructor(public model: Repository<Animal>) {
         debug('Instanciando controller');
-        this.model = new AnimalFileRepo();
     }
 
     getAllPage = async (req: Request, res: Response) => {
@@ -69,6 +66,7 @@ export class ProductsController {
         const data = req.body;
         try {
             const finalData = await this.model.create(data);
+            // throw error if not valid by zod
             this.showDetailPage(finalData, res);
         } catch (error) {
             const finalError = new HttpError(

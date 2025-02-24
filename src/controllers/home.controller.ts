@@ -5,9 +5,7 @@ const debug = createDebug('demo:controllers:home');
 debug('Loaded module');
 
 export class HomeController {
-    private view = new HomePage();
-
-    constructor() {
+    constructor(private view: HomePage) {
         debug('Instanciando controller');
     }
 
