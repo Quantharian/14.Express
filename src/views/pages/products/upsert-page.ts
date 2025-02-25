@@ -1,8 +1,4 @@
-// import { renderHeader } from '../partials/header.js';
-// import { renderHead } from '../partials/head.js';
-// import { renderFooter } from '../partials/footer.js';
-// import { renderDialogNav } from '../partials/dialog-nav.js';
-import type { Animal } from '../../../data/mock';
+import type { Animal } from '../../../models/animal.type';
 import { BasePage } from '../base-page.js';
 import createDebug from 'debug';
 
@@ -22,18 +18,9 @@ export class UpsertProductsPage extends BasePage {
         super(title);
     }
 
-    //<h3 class="h4">${item.name} <i>(${item.sciName})</i></h3>
-    // <p><strong>Inglés:</strong> ${item.englishName}</p>
-    // <p>
-    //     <img src="${item.image}" alt="${item.name}" />
-    // </p>
-    // <p><strong>Dieta:</strong> ${item.diet}</p>
-    // <p><strong>Estilo de vida:</strong> ${item.lifestyle}</p>
-    // <p><strong>Localización:</strong> ${item.location}</p>
+    private renderFormItems = (item: Animal | null) => {
+        item = item?.name ? item : null;
 
-    // <p><strong>Lema:</strong> ${item.slogan}</p>
-
-    private renderFormItems = (item: Animal) => {
         return html`
             <fieldset>
                 <label class="input">
@@ -42,8 +29,9 @@ export class UpsertProductsPage extends BasePage {
                         id="name"
                         name="name"
                         placeholder=" "
-                        ${item.name && `value="${item.name}"`}
-                        ${item.name && 'readonly'}
+                        required
+                        ${item && `value="${item.name}"`}
+                        ${item && 'readonly'}
                     />
                     <span>Nombre:</span>
                 </label>
@@ -53,7 +41,7 @@ export class UpsertProductsPage extends BasePage {
                         id="sciName"
                         name="sciName"
                         placeholder=" "
-                        ${item.sciName && `value="${item.sciName}"`}
+                        ${item && `value="${item.sciName}"`}
                     />
                     <span>Nombre científico:</span>
                 </label>
@@ -63,7 +51,7 @@ export class UpsertProductsPage extends BasePage {
                         id="englishName"
                         name="englishName"
                         placeholder=" "
-                        ${item.englishName && `value="${item.englishName}"`}
+                        ${item && `value="${item.englishName}"`}
                     />
                     <span>Nombre en inglés:</span>
                 </label>
@@ -73,7 +61,7 @@ export class UpsertProductsPage extends BasePage {
                         id="group"
                         name="group"
                         placeholder=" "
-                        ${item.group && `value="${item.group}"`}
+                        ${item && `value="${item.group}"`}
                     />
                     <span>Grupo (e.g. Mamíferos, Aves...):</span>
                 </label>
@@ -85,31 +73,41 @@ export class UpsertProductsPage extends BasePage {
                         id="image"
                         name="image"
                         placeholder=" "
-                        ${item.image && `value="${item.image}"`}
+                        ${item && `value="${item.image}"`}
+                        required
                     />
                     <span>Url de la imagen:</span>
                 </label>
             </fieldset>
             <fieldset>
+                <datalist id="diets">
+                    <option value="Carnívoro"></option>
+                    <option value="Herbívoro"></option>
+                    <option value="Omnívoro"></option>
+                </datalist>
                 <label class="input">
                     <input
                         type="text"
                         id="diet"
                         name="diet"
                         placeholder=" "
-                        ${item.diet && `value="${item.diet}"`}
+                        list="diets"
+                        ${item && `value="${item.diet}"`}
                     />
-                    <span>Dieta (Carnívoro, Hervívoro...):</span>
+                    <span>Dieta (Carnívoro, Herbívoro...):</span>
                 </label>
-                <label class="input">
-                    <input
-                        type="text"
+                <label class="select">
+                    <span>Estilo de vida </span>
+                    <select
                         id="lifestyle"
                         name="lifestyle"
-                        placeholder=" "
-                        ${item.lifestyle && `value="${item.lifestyle}"`}
-                    />
-                    <span>Estilo de vida (Diurno, Nocturno):</span>
+                        ${item && `value="${item.lifestyle}"`}
+                    >
+                        <option></option>
+                        <option ${item?.lifestyle === 'Diurno' && 'selected'}>Diurno</option>
+                        <option ${item?.lifestyle === 'Nocturno' && 'selected'}>Nocturno</option>
+                    </select>
+                  </label>
                 </label>
                 <label class="input">
                     <input
@@ -117,7 +115,7 @@ export class UpsertProductsPage extends BasePage {
                         id="location"
                         name="location"
                         placeholder=" "
-                        ${item.location && `value="${item.location}"`}
+                        ${item && `value="${item.location}"`}
                     />
                     <span>Localización:</span>
                 </label>
@@ -127,7 +125,7 @@ export class UpsertProductsPage extends BasePage {
                         id="slogan"
                         name="slogan"
                         placeholder=" "
-                        ${item.slogan && `value="${item.slogan}"`}
+                        ${item && `value="${item.slogan}"`}
                     />
                     <span>Lema:</span>
                 </label>
@@ -137,25 +135,12 @@ export class UpsertProductsPage extends BasePage {
 
     override renderMain({ mainTitle, mainContent }: PageContent) {
         debug('Iniciando renderMain');
+        debug('mainContent:', mainContent);
 
-        if (!mainContent) {
-            mainContent = {
-                id: '',
-                name: '',
-                sciName: '',
-                englishName: '',
-                group: '',
-                image: '',
-                diet: '',
-                lifestyle: '',
-                location: '',
-                slogan: '',
-            };
-        }
-        const action = mainContent.name ? 'update/' + mainContent.id : 'create';
+        const action = mainContent ? 'update/' + mainContent.id : 'create';
         // const method = 'PUT/PATCH/DELETE' NO ES VÁLIDO EN HTML - se toma como GET;
         const method = 'POST';
-        const textButton = mainContent.name ? 'Actualizar' : 'Crear';
+        const textButton = mainContent ? 'Actualizar' : 'Crear';
         return html`
             <main>
                 <section>

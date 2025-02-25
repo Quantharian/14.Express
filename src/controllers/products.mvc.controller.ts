@@ -81,7 +81,8 @@ export class ProductsController {
     updateProduct = async (req: Request, res: Response, next: NextFunction) => {
         debug('Petición PUT recibida en updateProduct');
         const { id } = req.params;
-        const data = { ...req.body, id };
+        // const data = { ...req.body, id };
+        const data = { ...req.body };
         try {
             await this.model.update(id, data);
             // throw error if not found
