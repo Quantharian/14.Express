@@ -1,4 +1,4 @@
-import type { Animal } from '../../../data/mock';
+import type { Animal } from '../../../models/animal.type';
 import { renderDialog } from '../../partials/dialog.js';
 import { BasePage } from '../base-page.js';
 import createDebug from 'debug';

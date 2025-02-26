@@ -12,7 +12,7 @@ export const Animal = z.object({
     group: z.string().nonempty(),
     image: z.string().url(),
     diet: z.string(),
-    lifestyle: z.string(),
+    lifestyle: z.enum(['Diurno', 'Nocturno']),
     location: z.string(),
     slogan: z.string(),
 });
@@ -25,12 +25,13 @@ export type Animal = z.infer<typeof Animal>;
 //     englishName: string;
 //     sciName: string;
 //     diet: string;
-//     lifestyle: string;
+//     lifestyle: 'Diurno' | 'Nocturno';
 //     location: string;
 //     slogan: string;
 //     group: string;
 //     image: string;
 // }
+
 export type AnimalCreateDTO = Omit<Animal, 'id'>;
 
 export type AnimalUpdateDTO = Partial<Omit<Animal, 'id'>>;

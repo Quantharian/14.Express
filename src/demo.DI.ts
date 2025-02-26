@@ -1,24 +1,41 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable */
+
+class InvoiceBad {
+    company = new Company('Acme Inc.');
+    constructor() {}
+}
+
 class Invoice {
-    company: Company;
-    constructor(company: Company) {
-        this.company = company;
+    //company: Company;
+    constructor(public company: Company) {
+        // this.company = company;
     }
 }
 
 class Company {
-    constructor (
+    constructor(
         public name: string = 'Acme Inc.',
-        public address: string='Address',
-        public phone: string= 'Phone',
-        public email: string= 'Email',
-        public website: string= 'Website',
-        public logo: string= 'Logo'
-    ){
-        console.log('Company created')
+        public address: string = 'Address',
+        public phone: string = 'Phone',
+        public email: string = 'Email',
+        public website: string = 'Website',
+        public logo: string = 'Logo',
+    ) {
+        console.log('Company created');
     }
 }
 
-const acme = new Company('Acme')
-const invoice = new Invoice(acme)
+const invoice_a = new InvoiceBad();
+const invoice_a2 = new InvoiceBad();
+
+const acme = new Company('Acme');
+const invoice = new Invoice(acme);
 const invoice2 = new Invoice(new Company('X'));
+const invoice3 = new Invoice({
+    name: 'Y',
+    address: 'Z',
+    phone: 'W',
+    email: 'V',
+    website: 'U',
+    logo: 'T',
+});

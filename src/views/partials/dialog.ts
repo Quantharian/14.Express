@@ -11,5 +11,3 @@ export function renderDialog(content: string) {
     `;
     return template;
 }
-
-export const manageDialog = () => {};

@@ -14,10 +14,12 @@ import { HomeController } from './controllers/home.controller.js';
 import { createProductsRouter } from './routers/products.router.js';
 import { HomePage } from './views/pages/home-page.js';
 import { ProductsController } from './controllers/products.mvc.controller.js';
+import type { Repository } from './models/repository.type.js';
+import type { Animal } from './models/animal.type.js';
 import { AnimalFileRepo } from './models/animals.json.repository.js';
 import { AnimalSqliteRepo } from './models/animals.sqlite.repository.js';
-import { Repository } from './models/repository.type.js';
-import { Animal } from './models/animal.type.js';
+import { AnimalMySqlRepo } from './models/animals.mysql.repository.js';
+import { AnimalPrismaRepo } from './models/animals.prisma.repository.js';
 
 const debug = createDebug('demo:app');
 debug('Loaded module');
@@ -57,15 +59,18 @@ export const createApp = () => {
     app.get('/', homeController.getPage);
 
     let animalModel: Repository<Animal>;
-    switch (process.env.REPO as 'file' | 'sqlite' | 'mysql') {
+    switch (process.env.REPO as 'file' | 'sqlite' | 'mysql' | 'prisma') {
         case 'sqlite':
             animalModel = new AnimalSqliteRepo();
             break;
         case 'mysql':
-            animalModel = new AnimalFileRepo();
+            animalModel = new AnimalMySqlRepo();
             break;
         case 'file':
             animalModel = new AnimalFileRepo();
+            break;
+        case 'prisma':
+            animalModel = new AnimalPrismaRepo();
             break;
         default:
             throw new Error('Invalid repository');

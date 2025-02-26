@@ -110,7 +110,7 @@ export class ODMLite<T extends { id: string }> implements TypeODM<T> {
             throw new Error(`Item with id ${id} not found`);
         }
         item = Object.assign(item, data);
-        // item = { ...item ...data }; // Otra forma de hacerlo
+        //item = { ...item, ...data }; // Otra forma de hacerlo
         await this.writeDB(allData);
         return item;
     }

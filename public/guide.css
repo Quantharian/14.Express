@@ -301,10 +301,7 @@ form {
         flex-flow: column nowrap;
         position: relative;
         margin-block-start: var(--space-double);
-
-        &:not(:last-of-type) {
-            margin-block-end: var(--space-double);
-        }
+        margin-block-end: var(--space-double);
 
         input,
         textarea {
